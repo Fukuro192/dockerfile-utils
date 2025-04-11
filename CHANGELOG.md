@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Fixed
+- prevent invalid heredocs from crashing the linter or formatter ([#127](https://github.com/rcjsuen/dockerfile-utils/issues/127))
+
 ## [0.16.1] - 2024-06-18
 ### Fixed
 - consider default value of a variable when determining if FROM is invalid or not ([#126](https://github.com/rcjsuen/dockerfile-utils/issues/126))

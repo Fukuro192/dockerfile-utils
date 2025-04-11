@@ -317,6 +317,12 @@ describe("Dockerfile formatter", function() {
                     assert.equal(edits[0].range.end.line, 1);
                     assert.equal(edits[0].range.end.character, 0);
                 });
+
+                it("invalid <<< heredoc", function() {
+                    const document = createDocument(`${instruction} <<<EOT\nEOT\n`);
+                    const edits = formatDocument(document, { insertSpaces: false, tabSize: 4 });
+                    assert.strictEqual(edits.length, 0);
+                });
             });
         }
 
@@ -932,6 +938,13 @@ describe("Dockerfile formatter", function() {
                     assert.equal(edits[0].range.start.character, 0);
                     assert.equal(edits[0].range.end.line, 1);
                     assert.equal(edits[0].range.end.character, 0);
+                });
+
+                it("invalid <<< heredoc", function() {
+                    const document = createDocument(`${instruction} <<<EOT\nEOT\n`);
+                    const range = Range.create(Position.create(0, 1), Position.create(1, 1));
+                    const edits = formatRange(document, range);
+                    assert.strictEqual(edits.length, 0);
                 });
             });
         }

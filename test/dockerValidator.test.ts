@@ -1697,6 +1697,57 @@ describe("Docker Validator Tests", function() {
                         const diagnostics = validateDockerfile(`FROM alpine\n${instruction} <<eot file.txt <<eot2 file2.txt\nabc\n\neot\nabc\n\neot2`, { emptyContinuationLine: ValidationSeverity.WARNING });
                         assert.strictEqual(diagnostics.length, 0);
                     });
+
+                    it("invalid <<< used", () => {
+                        const diagnostics = validateDockerfile(`FROM alpine\n${instruction} <<<test\ntest\n`);
+                        if (instruction === Keyword.RUN) {
+                            assert.strictEqual(diagnostics.length, 1);
+                            assertInstructionUnknown(diagnostics[0], 2, "TEST", 2, 0, 2, 4)
+                        } else {
+                            assertDiagnostics(diagnostics,
+                                [ ValidationCode.UNKNOWN_INSTRUCTION, ValidationCode.ARGUMENT_REQUIRES_AT_LEAST_TWO ],
+                                [ assertInstructionUnknown, assertCOPYRequiresAtLeastTwoArguments ],
+                                [
+                                    [ 2, "TEST", 2, 0, 2, 4 ],
+                                    [ 1, 1, 5, 1, 12 ]
+                                ]
+                            );
+                        }
+                    });
+
+                    it("delimiter end single quote missing", () => {
+                        const diagnostics = validateDockerfile(`FROM alpine\n${instruction} <<'test\ntest\n`);
+                        if (instruction === Keyword.RUN) {
+                            assert.strictEqual(diagnostics.length, 1);
+                            assertInstructionUnknown(diagnostics[0], 2, "TEST", 2, 0, 2, 4)
+                        } else {
+                            assertDiagnostics(diagnostics,
+                                [ ValidationCode.UNKNOWN_INSTRUCTION, ValidationCode.ARGUMENT_REQUIRES_AT_LEAST_TWO ],
+                                [ assertInstructionUnknown, assertCOPYRequiresAtLeastTwoArguments ],
+                                [
+                                    [ 2, "TEST", 2, 0, 2, 4 ],
+                                    [ 1, 1, 5, 1, 12 ]
+                                ]
+                            );
+                        }
+                    });
+
+                    it("delimiter end double quote missing", () => {
+                        const diagnostics = validateDockerfile(`FROM alpine\n${instruction} <<"test\ntest\n`);
+                        if (instruction === Keyword.RUN) {
+                            assert.strictEqual(diagnostics.length, 1);
+                            assertInstructionUnknown(diagnostics[0], 2, "TEST", 2, 0, 2, 4)
+                        } else {
+                            assertDiagnostics(diagnostics,
+                                [ ValidationCode.UNKNOWN_INSTRUCTION, ValidationCode.ARGUMENT_REQUIRES_AT_LEAST_TWO ],
+                                [ assertInstructionUnknown, assertCOPYRequiresAtLeastTwoArguments ],
+                                [
+                                    [ 2, "TEST", 2, 0, 2, 4 ],
+                                    [ 1, 1, 5, 1, 12 ]
+                                ]
+                            );
+                        }
+                    });
                 }
 
                 testHeredocs(Keyword.COPY);

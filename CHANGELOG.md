@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.16.2] - 2025-04-10
 ### Fixed
 - prevent invalid heredocs from crashing the linter or formatter ([#127](https://github.com/rcjsuen/dockerfile-utils/issues/127))
 
@@ -283,7 +283,8 @@ export interface FormatterSettings extends FormattingOptions {
 - create formatter for Dockerfiles
 - create linter for Dockerfiles
 
-[Unreleased]: https://github.com/rcjsuen/dockerfile-utils/compare/v0.16.1...HEAD
+[Unreleased]: https://github.com/rcjsuen/dockerfile-utils/compare/v0.16.2...HEAD
+[0.16.2]: https://github.com/rcjsuen/dockerfile-utils/compare/v0.16.1...v0.16.2
 [0.16.1]: https://github.com/rcjsuen/dockerfile-utils/compare/v0.16.0...v0.16.1
 [0.16.0]: https://github.com/rcjsuen/dockerfile-utils/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/rcjsuen/dockerfile-utils/compare/v0.14.0...v0.15.0

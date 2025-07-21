@@ -1358,6 +1358,10 @@ describe("Docker Validator Tests", function() {
                     content = `FROM node\n${prefix}RUN <<-'eot'\n  echo\neot`;
                     diagnostics = validateDockerfile(content);
                     assert.equal(diagnostics.length, 0);
+
+                    content = `FROM node\n${prefix}RUN <<-EOT\n\thello\n\tEOT\nRUN <<EOT\nhello2\nEOT`;
+                    diagnostics = validateDockerfile(content);
+                    assert.equal(diagnostics.length, 0);
                 });
             }
 

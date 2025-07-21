@@ -282,7 +282,7 @@ describe("Dockerfile formatter", function() {
         });
 
         function testHeredocs(instruction: string): void {
-            describe("ignore heredocs", () => {
+            describe(`ignore heredocs (${instruction})`, function() {
                 it("<<EOT", () => {
                     const document = createDocument(`${instruction} <<EOT\nabc\nEOT`);
                     const edits = formatDocument(document, { insertSpaces: false, tabSize: 4 });
@@ -320,6 +320,12 @@ describe("Dockerfile formatter", function() {
 
                 it("invalid <<< heredoc", function() {
                     const document = createDocument(`${instruction} <<<EOT\nEOT\n`);
+                    const edits = formatDocument(document, { insertSpaces: false, tabSize: 4 });
+                    assert.strictEqual(edits.length, 0);
+                });
+
+                it("tabbed delimiter and untabbed", function() {
+                    const document = createDocument(`${instruction} <<-EOT\n\thello\n\tEOT\nCOPY <<EOT\nhello2\nEOT`);
                     const edits = formatDocument(document, { insertSpaces: false, tabSize: 4 });
                     assert.strictEqual(edits.length, 0);
                 });
@@ -899,7 +905,7 @@ describe("Dockerfile formatter", function() {
         });
 
         function testHeredocs(instruction: string): void {
-            describe("ignore heredocs", () => {
+            describe(`ignore heredocs (${instruction})`, function() {
                 it("<<EOT", () => {
                     const document = createDocument(`${instruction} <<EOT\nabc\nEOT`);
                     const range = Range.create(Position.create(0, 1), Position.create(2, 1));
@@ -943,6 +949,13 @@ describe("Dockerfile formatter", function() {
                 it("invalid <<< heredoc", function() {
                     const document = createDocument(`${instruction} <<<EOT\nEOT\n`);
                     const range = Range.create(Position.create(0, 1), Position.create(1, 1));
+                    const edits = formatRange(document, range);
+                    assert.strictEqual(edits.length, 0);
+                });
+
+                it("tabbed delimiter and untabbed", function() {
+                    const document = createDocument(`${instruction} <<-EOT\n\thello\n\tEOT\nCOPY <<EOT\nhello2\nEOT`);
+                    const range = Range.create(Position.create(0, 1), Position.create(5, 1));
                     const edits = formatRange(document, range);
                     assert.strictEqual(edits.length, 0);
                 });

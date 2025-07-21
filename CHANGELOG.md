@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Fixed
+- prevent tabbed delimiters in heredocs from crashing the linter and formatter ([#129](https://github.com/rcjsuen/dockerfile-utils/issues/129))
+
 ## [0.16.2] - 2025-04-10
 ### Fixed
 - prevent invalid heredocs from crashing the linter or formatter ([#127](https://github.com/rcjsuen/dockerfile-utils/issues/127))

@@ -846,8 +846,10 @@ export class Validator {
                 }
             }
             const destination = lastArg.getValue();
+            const destinationNormalized = destination.trim().replace(/^["']+|["']+$/g, '');
+            const isCurrentDir = destinationNormalized === '.' || destinationNormalized === './';
             const lastChar = destination.charAt(destination.length - 1);
-            if (lastChar !== '\\' && lastChar !== '/') {
+            if (!isCurrentDir && lastChar !== '\\' && lastChar !== '/') {
                 return notDirectoryFunction(instruction.getInstructionRange().start.line, lastArg.getRange());
             }
         }
@@ -909,8 +911,10 @@ export class Validator {
                 }
             }
             const destination = lastJsonString.getValue();
+            const destinationNormalized = destination.trim().replace(/^["']+|["']+$/g, '');
+            const isCurrentDir = destinationNormalized === '.' || destinationNormalized === './';
             const lastChar = destination.charAt(destination.length - 2);
-            if (lastChar !== '\\' && lastChar !== '/') {
+            if (!isCurrentDir && lastChar !== '\\' && lastChar !== '/') {
                 return notDirectoryFunction(instruction.getInstructionRange().start.line, jsonStrings[jsonStrings.length - 1].getJSONRange());
             }
         }

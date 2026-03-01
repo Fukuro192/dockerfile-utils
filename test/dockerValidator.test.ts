@@ -2213,6 +2213,20 @@ describe("Docker Validator Tests", function() {
                 assert.equal(diagnostics.length, 1);
                 assertADDDestinationNotDirectory(diagnostics[0], 2, 2, 33, 2, 39);
             });
+
+            it("multiple sources with destination . or ./ do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 .");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ./");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD [ \"file1\", \"file2\", \"file3\", \".\" ]");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD [ \"file1\", \"file2\", \"file3\", \"./\" ]");
+                assert.equal(diagnostics.length, 0);
+            });
         });
 
         describe("flags", function() {
@@ -2789,6 +2803,20 @@ describe("Docker Validator Tests", function() {
                 diagnostics = validateDockerfile("#escape=`\nFROM microsoft/nanoserver\nCOPY [\"Dockerfile\",\"Dockerfile2\",\"C:\\tmp\" ]");
                 assert.equal(diagnostics.length, 1);
                 assertCOPYDestinationNotDirectory(diagnostics[0], 2, 2, 34, 2, 40);
+            });
+
+            it("multiple sources with destination . or ./ do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 .");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 ./");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nCOPY [ \"file1\", \"file2\", \"file3\", \".\" ]");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nCOPY [ \"file1\", \"file2\", \"file3\", \"./\" ]");
+                assert.equal(diagnostics.length, 0);
             });
         });
 

@@ -2265,6 +2265,11 @@ describe("Docker Validator Tests", function() {
                 diagnostics = validateDockerfile("#escape=`\nFROM alpine\nADD file1 file2 ..\\");
                 assert.equal(diagnostics.length, 0);
             });
+
+            it("destination with leading slash or path segments (e.g. /.././../directory1/.) do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 /.././../directory1/.");
+                assert.equal(diagnostics.length, 0);
+            });
         });
 
         describe("flags", function() {
@@ -2886,6 +2891,14 @@ describe("Docker Validator Tests", function() {
                 assert.equal(diagnostics.length, 0);
 
                 diagnostics = validateDockerfile("#escape=`\nFROM alpine\nCOPY file1 file2 ..\\");
+                assert.equal(diagnostics.length, 0);
+            });
+
+            it("destination with leading slash or path segments (e.g. /.././../directory1/.) do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 /.././../directory1/.");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nCOPY [ \"file1\", \"file2\", \"/.././../directory1/.\" ]");
                 assert.equal(diagnostics.length, 0);
             });
         });

@@ -2227,6 +2227,14 @@ describe("Docker Validator Tests", function() {
                 diagnostics = validateDockerfile("FROM alpine\nADD [ \"file1\", \"file2\", \"file3\", \"./\" ]");
                 assert.equal(diagnostics.length, 0);
             });
+
+            it("multiple sources with destination .. or ../ do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ..");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ../");
+                assert.equal(diagnostics.length, 0);
+            });
         });
 
         describe("flags", function() {
@@ -2816,6 +2824,14 @@ describe("Docker Validator Tests", function() {
                 assert.equal(diagnostics.length, 0);
 
                 diagnostics = validateDockerfile("FROM alpine\nCOPY [ \"file1\", \"file2\", \"file3\", \"./\" ]");
+                assert.equal(diagnostics.length, 0);
+            });
+
+            it("multiple sources with destination .. or ../ do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 ..");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 ../");
                 assert.equal(diagnostics.length, 0);
             });
         });

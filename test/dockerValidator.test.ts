@@ -2234,6 +2234,12 @@ describe("Docker Validator Tests", function() {
 
                 diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ../");
                 assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD [ \"file1\", \"file2\", \"file3\", \"..\" ]");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD [ \"file1\", \"file2\", \"file3\", \"../\" ]");
+                assert.equal(diagnostics.length, 0);
             });
 
             it("destination with trailing slash (./ and ../) accepted so relative-dir regex does not regress", function() {
@@ -2249,6 +2255,14 @@ describe("Docker Validator Tests", function() {
                 assert.equal(diagnostics.length, 0);
 
                 diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ../../");
+                assert.equal(diagnostics.length, 0);
+            });
+
+            it("relative paths with backslash (Windows-style) do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("#escape=`\nFROM alpine\nADD file1 file2 ..\\..");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("#escape=`\nFROM alpine\nADD file1 file2 ..\\");
                 assert.equal(diagnostics.length, 0);
             });
         });
@@ -2864,6 +2878,14 @@ describe("Docker Validator Tests", function() {
                 assert.equal(diagnostics.length, 0);
 
                 diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 ../../");
+                assert.equal(diagnostics.length, 0);
+            });
+
+            it("relative paths with backslash (Windows-style) do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("#escape=`\nFROM alpine\nCOPY file1 file2 ..\\..");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("#escape=`\nFROM alpine\nCOPY file1 file2 ..\\");
                 assert.equal(diagnostics.length, 0);
             });
         });

@@ -2235,6 +2235,22 @@ describe("Docker Validator Tests", function() {
                 diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ../");
                 assert.equal(diagnostics.length, 0);
             });
+
+            it("destination with trailing slash (./ and ../) accepted so relative-dir regex does not regress", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 ./");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 ../");
+                assert.equal(diagnostics.length, 0);
+            });
+
+            it("deeper relative paths ../.. and ../../ do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ../..");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nADD file1 file2 file3 ../../");
+                assert.equal(diagnostics.length, 0);
+            });
         });
 
         describe("flags", function() {
@@ -2832,6 +2848,22 @@ describe("Docker Validator Tests", function() {
                 assert.equal(diagnostics.length, 0);
 
                 diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 ../");
+                assert.equal(diagnostics.length, 0);
+            });
+
+            it("destination with trailing slash (./ and ../) accepted so relative-dir regex does not regress", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 ./");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 ../");
+                assert.equal(diagnostics.length, 0);
+            });
+
+            it("deeper relative paths ../.. and ../../ do not produce invalidDestination", function() {
+                let diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 ../..");
+                assert.equal(diagnostics.length, 0);
+
+                diagnostics = validateDockerfile("FROM alpine\nCOPY file1 file2 file3 ../../");
                 assert.equal(diagnostics.length, 0);
             });
         });

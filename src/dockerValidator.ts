@@ -847,9 +847,9 @@ export class Validator {
             }
             const destination = lastArg.getValue();
             const destinationNormalized = destination.trim().replace(/^["']+|["']+$/g, '');
-            const isCurrentOrParentDir = destinationNormalized === '.' || destinationNormalized === './' || destinationNormalized === '..' || destinationNormalized === '../';
+            const isRelativeDir = /^(\.\.?\/)*\.\.?\/?$/.test(destinationNormalized);
             const lastChar = destination.charAt(destination.length - 1);
-            if (!isCurrentOrParentDir && lastChar !== '\\' && lastChar !== '/') {
+            if (!isRelativeDir && lastChar !== '\\' && lastChar !== '/') {
                 return notDirectoryFunction(instruction.getInstructionRange().start.line, lastArg.getRange());
             }
         }
@@ -912,9 +912,9 @@ export class Validator {
             }
             const destination = lastJsonString.getValue();
             const destinationNormalized = destination.trim().replace(/^["']+|["']+$/g, '');
-            const isCurrentOrParentDir = destinationNormalized === '.' || destinationNormalized === './' || destinationNormalized === '..' || destinationNormalized === '../';
+            const isRelativeDir = /^(\.\.?\/)*\.\.?\/?$/.test(destinationNormalized);
             const lastChar = destination.charAt(destination.length - 2);
-            if (!isCurrentOrParentDir && lastChar !== '\\' && lastChar !== '/') {
+            if (!isRelativeDir && lastChar !== '\\' && lastChar !== '/') {
                 return notDirectoryFunction(instruction.getInstructionRange().start.line, jsonStrings[jsonStrings.length - 1].getJSONRange());
             }
         }
